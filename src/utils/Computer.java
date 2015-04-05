@@ -5,15 +5,33 @@ import java.util.List;
 
 import model.Binaries;
 import model.Binary;
-import model.CannotSimplifyException;
+import exception.CannotSimplifyException;
 
-
+/**
+ * Does the computing tasks
+ * 
+ * @author anthony
+ *
+ */
 public class Computer {
 	
+	/**
+	 * 
+	 * @param bin1 binary one
+	 * @param bin2 binary two
+	 * @return true if one of them is 0 and the other 1
+	 */
 	public static boolean isSimpl(Binary.binaryValue bin1,Binary.binaryValue bin2) {
 		return ((bin1 == Binary.binaryValue.O ) && (bin2 == Binary.binaryValue.I ))||((bin1 == Binary.binaryValue.I ) && (bin2 == Binary.binaryValue.O));
 	}
 	
+	/**
+	 * 
+	 * @param bin1 binary one
+	 * @param bin2 binary two
+	 * @param dimension The dimension of the function
+	 * @return the simplification between binary one and binary two
+	 */
 	public static Binary simplifyWithBinary(Binary bin1,Binary bin2,int dimension) {
 		int simplCounter = 0;
 		int diffCounter = 0;
@@ -39,6 +57,13 @@ public class Computer {
 		return newBin;
 	}
 	
+	/**
+	 * 
+	 * @param bin1 The binary one
+	 * @param bins The binaries of the next set
+	 * @param dimension The dimension of the function
+	 * @return the simplification between binary one and the bins from the next set
+	 */
 	public static List<Binary> simplifyWithBinaries(Binary bin1,Binaries bins,int dimension) {
 		 List<Binary> binaryList = new ArrayList<Binary>();
 		 
@@ -54,6 +79,12 @@ public class Computer {
 		 return binaryList;
 	}
 	
+	/**
+	 * 
+	 * @param bins binaries from the function to sort
+	 * @param The dimension dimension of the function
+	 * @return binaries sorted in zero containing sets
+	 */
 	public static List<Binaries> sortMinTerms(Binaries bins,int dimension) {
 		
 		List<Binaries> result = new ArrayList<Binaries>(dimension+1);
@@ -73,6 +104,13 @@ public class Computer {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param sortedBins Binaries sorted in zero containing sets
+	 * @param dimension The dimension of the function
+	 * @return the simplified Binaries
+	 * @throws CannotSimplifyException thrown if the simplification cannot longer proceed
+	 */
 	public static Binaries simplifyMinTerms(List<Binaries> sortedBins,int dimension) throws CannotSimplifyException{
 		Binaries simplifiedMinTerms = new Binaries();
 		boolean isSimplified = false;
@@ -81,9 +119,10 @@ public class Computer {
 			sortedBins.remove(i);
 		}
 		
-		for (int i=0;i<sortedBins.size()-1;i++) {
+		for (int i=0;i<sortedBins.size();i++) {
 			for(Binary bin1 : sortedBins.get(i).getBins()) {
-				Binaries nextBinaries = sortedBins.get(i+1);
+				int next = (i == sortedBins.size()-1) ? i-1 : i+1;
+				Binaries nextBinaries = sortedBins.get(next);
 				List<Binary> simplifiedBin = simplifyWithBinaries(bin1,nextBinaries,dimension);
 				if (simplifiedBin != null) {
 					simplifiedMinTerms.addBinaries(simplifiedBin);
@@ -94,7 +133,7 @@ public class Computer {
 			}
 		}
 		
-		if (!isSimplified) throw new CannotSimplifyException();
+		if (!isSimplified) throw new CannotSimplifyException("Cannot simplify anymore!");
 		
 		return simplifiedMinTerms;
 	}	

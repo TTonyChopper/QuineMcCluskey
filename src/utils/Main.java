@@ -2,43 +2,75 @@ package utils;
 import java.util.List;
 
 import model.Binaries;
-import model.CannotSimplifyException;
+import exception.CannotParseException;
+import exception.CannotSimplifyException;
+import exception.InvalidMinTermException;
 
-
+/**
+ * Main class
+ * 
+ * @author anthony
+ *
+ */
 public class Main {
 
+	/*
+	 * Entry point 
+	 */
 	public static void main(String[] args) {
 
 //TESTS sans string
 //		Binaries bin = new Binaries();
-//		bin.addBinary(new Binary("IO"));
-//		bin.addBinary(new Binary("II"));
-//		bin.addBinary(new Binary("OO"));
-//		bin.addBinary(new Binary("OI"));
+//		bin.addBinary(new Binary("IOXII"));
+//		bin.addBinary(new Binary("IXIOX"));
+//		bin.addBinary(new Binary("OOXXX"));
+//		bin.addBinary(new Binary("OIOXX"));
 //		
 //		System.out.println(bin);
 //		Binaries newBin = McCluskeySimplify(bin);
 //		System.out.println(newBin);
 		
 //TESTS avec string
-		String test = "ab+-ab+-a-b";
-		String result = McCluskeySimplifyStrings(test);
+		String test = "b-ac+-cb-a+-a-bc+-b-c-a+-g";
+		String result = null;
+		try {
+			result = McCluskeySimplifyStrings(test);
+		} catch (CannotParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidMinTermException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(result);
-		
-		
 	}
 	
-	public static String McCluskeySimplifyStrings(String test) {
-		int dimension = Converter.stringToBinariesDimension(test);
-		Binaries bins = Converter.stringToBinaries(test,dimension);
+	/**
+	 * 
+	 * @param test
+	 * @return
+	 * @throws CannotParseException 
+	 * @throws InvalidMinTermException 
+	 */
+	public static String McCluskeySimplifyStrings(String test) throws CannotParseException, InvalidMinTermException {
+		String[] binaryWords = test.split("\\+");
+		
+		int dimension = Converter.countLetters(binaryWords);
+		Binaries bins = Converter.stringToBinaries(binaryWords,dimension);
 		
 		Binaries simplifiedMinTerms = McCluskeySimplify(bins,dimension);
 		
-		String result = Converter.binariesToString(simplifiedMinTerms,dimension);
+		String result = Converter.binariesToString(simplifiedMinTerms);
 		
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param bins
+	 * @param dimension
+	 * @return
+	 */
 	public static Binaries McCluskeySimplify(Binaries bins,int dimension) {
 		List<Binaries> sortedBins = Computer.sortMinTerms(bins,dimension);
 		Binaries simplifiedMinTerms = bins;

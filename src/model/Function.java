@@ -2,7 +2,12 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Function,represented by the decimal values of its minterms
+ * 
+ * @author anthony
+ *
+ */
 public class Function {
 
 	private List<Integer> minTerms;

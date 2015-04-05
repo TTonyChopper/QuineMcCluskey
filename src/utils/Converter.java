@@ -1,7 +1,19 @@
 package utils;
+import java.util.ArrayList;
+import java.util.List;
+
+import exception.CannotParseException;
+import exception.InvalidMinTermException;
 import model.Binaries;
 import model.Binary;
+import model.MinTermString;
 
+/**
+ * Does the converting betwen the different formats
+ * 
+ * @author anthony
+ *
+ */
 public class Converter {
 	
 	//TODO
@@ -37,19 +49,87 @@ public class Converter {
 		return result;
 	}*/
 	
-	public static int stringToBinariesDimension(String s) {
-		return 2;
+	/**
+	 * 
+	 * @param b minterm in a String
+	 * @return the length of the minterm
+	 * @throws CannotParseException thrown when the String format is invalid
+	 * only letters are accepted [a-z] or - to negate a bit
+	 */
+	public static int countLetters(String b) throws CannotParseException {
+		int length = 0;
+		
+		for (int i=0;i<b.length();i++) {
+			if (((b.charAt(i)=='-')&&(i<b.length()-1))&&(b.substring(i+1,i+2).matches("[a-z]"))) {
+				i++;
+				length = b.charAt(i) - 'a' + 1;
+			}
+			else if (b.substring(i,i+1).matches("[a-z]")) length = b.charAt(i) - 'a' + 1;
+			else throw new CannotParseException("Cannot parse!");
+		}
+		
+		if (length == 0) throw new CannotParseException("Cannot parse!");
+		
+		return length;
 	}
 	
-	public static Binaries stringToBinaries(String s,int dimension) {
-		return stringToBinariesDim2(s);
+	/**
+	 * 
+	 * @param b minterms in a String array
+	 * @return the max length of the minterms
+	 * @throws CannotParseException
+	 */
+	public static int countLetters(String[] b) throws CannotParseException {
+		int length = 0;
+		
+		for (int i=0;i<b.length;i++) {
+			int l = countLetters(b[i]);
+			if (l > length) length = l; 
+		}
+		
+		return length;
 	}
 	
-	public static String binariesToString(Binaries b,int dimension) {
-		return binariesToStringDim2(b);
+	/**
+	 * 
+	 * @param s minterms in String form
+	 * @param dimension max length of the minterms
+	 * @return the minterms in Binaries form
+	 * @throws InvalidMinTermException 
+	 */
+	public static Binaries stringToBinaries(String[] s,int dimension) throws InvalidMinTermException {
+		List<Binary> binaries = new ArrayList<Binary>();
+		
+		for (String binaryWord : s) {
+			MinTermString mts = new MinTermString(binaryWord.toCharArray());
+			binaries.add(mts.toBinary(dimension));
+		}
+		
+		return new Binaries(binaries);
 	}
 	
-	//Specific Dimension 2
+	/**
+	 * 
+	 * @param b minterms in Binaries form
+	 * @return the minterms in String form
+	 */
+	public static String binariesToString(Binaries b) {
+		StringBuffer sb = new StringBuffer();
+		
+		for (int i=0;i<b.size();i++) {
+			if (i>0) sb.append("+");
+			sb.append(b.getBins().get(i).toMinTermString().toString());
+		}
+		
+		return sb.toString();
+	}
+
+	/**
+	 * Specific Dimension 2
+	 * 
+	 * @param s minterms in String form
+	 * @return the minterms in Binaries form
+	 */
 	public static Binaries stringToBinariesDim2(String s) {
 		Binaries result = new Binaries();
 		
@@ -81,7 +161,12 @@ public class Converter {
 		return result;
 	}
 	
-	//Specific Dimension 2
+	/**
+	 * Specific Dimension 2
+	 * 
+	 * @param b minterms in Binaries form
+	 * @return the minterms in String form
+	 */
 	public static String binariesToStringDim2(Binaries b) {
 		StringBuffer result = new StringBuffer();
 		
