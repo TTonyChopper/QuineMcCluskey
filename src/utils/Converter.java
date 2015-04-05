@@ -2,11 +2,11 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import exception.CannotParseException;
-import exception.InvalidMinTermException;
 import model.Binaries;
 import model.Binary;
 import model.MinTermString;
+import exception.CannotParseException;
+import exception.InvalidMinTermException;
 
 /**
  * Does the converting betwen the different formats
@@ -15,39 +15,6 @@ import model.MinTermString;
  *
  */
 public class Converter {
-	
-	//TODO
-		/*
-	public static Function stringToFunction(String s) {
-		return new Function();
-	}*/
-	
-	//TODO
-		/*
-	public static String functionToString(Function f) {
-		return new String();
-	}*/
-
-	//TODO
-		/*
-	public static Function binariesToFunction(Binaries b) {
-		Function result = new Function();
-		for(Binary bin : b.getBins()) {
-			result.addMinTerm(Binary.convertFromBin(bin));
-		}
-		return result;
-	}*/
-
-	//TODO
-	/*
-	public static Binaries functionToBinaries(Function f) {
-		Binaries result = new Binaries();
-
-		for(Integer val : f.getMinTerms()) {
-			result.addBinary(Binary.convertToBin(val));
-		}
-		return result;
-	}*/
 	
 	/**
 	 * 
@@ -130,6 +97,7 @@ public class Converter {
 	 * @param s minterms in String form
 	 * @return the minterms in Binaries form
 	 */
+	@Deprecated
 	public static Binaries stringToBinariesDim2(String s) {
 		Binaries result = new Binaries();
 		
@@ -167,6 +135,7 @@ public class Converter {
 	 * @param b minterms in Binaries form
 	 * @return the minterms in String form
 	 */
+	@Deprecated
 	public static String binariesToStringDim2(Binaries b) {
 		StringBuffer result = new StringBuffer();
 		
