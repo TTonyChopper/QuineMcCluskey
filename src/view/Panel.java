@@ -9,17 +9,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
-import model.Binaries;
 import utils.Computer;
-import utils.Converter;
 import exception.CannotParseException;
-import exception.CannotSimplifyException;
 import exception.InvalidMinTermException;
 
 public class Panel extends Frame implements ActionListener,// Pour evenements bouton
@@ -81,49 +77,6 @@ public class Panel extends Frame implements ActionListener,// Pour evenements bo
 		setVisible(true);
 
 	}
-	
-	/**
-	 * 
-	 * @param test
-	 * @return
-	 * @throws CannotParseException 
-	 * @throws InvalidMinTermException 
-	 */
-	public static String McCluskeySimplifyStrings(String test) throws CannotParseException, InvalidMinTermException {
-		String[] binaryWords = test.split("\\+");
-		
-		int dimension = Converter.countLetters(binaryWords);
-		Binaries bins = Converter.stringToBinaries(binaryWords,dimension);
-		
-		Binaries simplifiedMinTerms = McCluskeySimplify(bins,dimension);
-		
-		String result = Converter.binariesToString(simplifiedMinTerms);
-		
-		return result;
-	}
-	
-	/**
-	 * 
-	 * @param bins
-	 * @param dimension
-	 * @return
-	 */
-	public static Binaries McCluskeySimplify(Binaries bins,int dimension) {
-		List<Binaries> sortedBins = Computer.sortMinTerms(bins,dimension);
-		Binaries simplifiedMinTerms = bins;
-		boolean stop = false;
-		
-		do {
-			try {
-				simplifiedMinTerms = Computer.simplifyMinTerms(sortedBins,dimension);
-				sortedBins = Computer.sortMinTerms(simplifiedMinTerms,dimension);
-			} catch (CannotSimplifyException e) {
-				stop = true;
-			}		
-		} while(!stop);
-		
-		return simplifiedMinTerms;
-	}
 
 	public void windowActivated(WindowEvent arg0) {
 	}
@@ -152,7 +105,7 @@ public class Panel extends Frame implements ActionListener,// Pour evenements bo
 			String text = input.getText();
 			String result = null;
 			try {
-				result = McCluskeySimplifyStrings(text);
+				result = Computer.McCluskeySimplifyStrings(text);
 				output.setText(result);
 			} catch (CannotParseException e1) {
 				output.setText(e1.getMessage());

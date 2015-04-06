@@ -25,14 +25,16 @@ public class Converter {
 	 */
 	public static int countLetters(String b) throws CannotParseException {
 		int length = 0;
+		int lengthCandidate = 0;
 		
 		for (int i=0;i<b.length();i++) {
 			if (((b.charAt(i)=='-')&&(i<b.length()-1))&&(b.substring(i+1,i+2).matches("[a-z]"))) {
 				i++;
-				length = b.charAt(i) - 'a' + 1;
+				lengthCandidate = b.charAt(i) - 'a' + 1;
 			}
-			else if (b.substring(i,i+1).matches("[a-z]")) length = b.charAt(i) - 'a' + 1;
+			else if (b.substring(i,i+1).matches("[a-z]")) lengthCandidate = b.charAt(i) - 'a' + 1;
 			else throw new CannotParseException("Cannot parse!");
+			if (lengthCandidate > length) length = lengthCandidate;
 		}
 		
 		if (length == 0) throw new CannotParseException("Cannot parse!");
@@ -82,6 +84,12 @@ public class Converter {
 	 */
 	public static String binariesToString(Binaries b) {
 		StringBuffer sb = new StringBuffer();
+		
+		for (Binary bin : b.getBins()) {
+			if (bin.isOne()) {
+				return "1";
+			}
+		}
 		
 		for (int i=0;i<b.size();i++) {
 			if (i>0) sb.append("+");

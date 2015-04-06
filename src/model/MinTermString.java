@@ -91,6 +91,7 @@ public class MinTermString {
 	
 	@Override
 	public String toString() {
+		if (chars == null) return "1";
 		return new String(chars);
 	}
 	

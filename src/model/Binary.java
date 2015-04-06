@@ -120,6 +120,17 @@ public class Binary implements Comparable<Binary>{
 	
 	/**
 	 * 
+	 * @return true if the binary contains only undefined bits, binaryValue X
+	 */
+	public boolean isOne() {
+		for (binaryValue binValue : bin) {
+			if (binValue != binaryValue.X) return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
 	 * @param bin bin to convert to decimal value
 	 * @return the decimal value of the bin
 	 */
@@ -159,6 +170,9 @@ public class Binary implements Comparable<Binary>{
 		int dimension = bin.size();
 		int zero = zeroContained();
 		int one = oneContained();
+		
+		int lengthToDisplay = 2*zero+one;
+		if (lengthToDisplay == 0) return new MinTermString();
 		
 		char[] minterm = new char[2*zero+one];
 		char letter = 'a';
